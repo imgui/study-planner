@@ -4,7 +4,7 @@ import datetime
 SEM_START_DATE = datetime.datetime(2021, 7, 26)
 SEM_BREAK_DATE = datetime.datetime(2021, 9, 13)
 SEM_RESUME_DATE = datetime.datetime(2021, 9, 27)
-SEM_END_DATE = datetime.datetime(2021, 11, 29)
+SEM_END_DATE = datetime.datetime(2021, 11, 27)
 # 0 is Sunday ... 6 is Saturday (CAL for Calendar)
 CAL_START_WEEKDAY = 1
 ###
@@ -78,7 +78,6 @@ while week < table1_weeks_count:
             # If current week is during semester and not during break
             if current_date + datetime.timedelta(days=CAL_START_WEEKDAY) >= SEM_START_DATE and current_date + datetime.timedelta(days=CAL_START_WEEKDAY) < SEM_END_DATE and (current_date + datetime.timedelta(days=CAL_START_WEEKDAY) < SEM_BREAK_DATE or current_date + datetime.timedelta(days=CAL_START_WEEKDAY) >= SEM_RESUME_DATE) :
                 semester_week = semester_week + 1
-                print (semester_week)
                 dwg.add(dwg.text(semester_week, insert=(x - text_padding * 4, y + cell_height / 2), fill='black', font_family='Helvetica', font_size=text_size, style="baseline-shift:-33%;text-anchor:end"))
                 
         if week == 0:
@@ -137,7 +136,6 @@ while week < table2_weeks_count:
             # If current week is during semester and not during break
             if current_date + datetime.timedelta(days=CAL_START_WEEKDAY) >= SEM_START_DATE and current_date + datetime.timedelta(days=CAL_START_WEEKDAY) < SEM_END_DATE and (current_date + datetime.timedelta(days=CAL_START_WEEKDAY) < SEM_BREAK_DATE or current_date + datetime.timedelta(days=CAL_START_WEEKDAY) >= SEM_RESUME_DATE) :
                 semester_week = semester_week + 1
-                print (semester_week)
                 dwg.add(dwg.text(semester_week, insert=(x - text_padding * 4, y + cell_height / 2), fill='black', font_family='Helvetica', font_size=text_size, style="baseline-shift:-33%;text-anchor:end"))
         
         if week == 0:
@@ -163,6 +161,7 @@ while week < table2_weeks_count:
     week = week + 1
 # todo rotate
 dwg.save()
+print("Saved to 'studyplanoutput.svg'")
 
 
     
