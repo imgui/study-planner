@@ -14,4 +14,4 @@ Below is a typical output:
 **Requirements**
 * svgwrite
 
-[sample]: https://github.com/imgui/study-planner/sample.svg
+[sample]: https://raw.githubusercontent.com/imgui/study-planner/main/sample.svg
