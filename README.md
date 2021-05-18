@@ -9,7 +9,7 @@ The output is saved to studyplanoutput.svg. To print, open the file in a web bro
 
 Below is a typical output:
 
-![alt text][logo]
+![alt text][sample]
 
 **Requirements**
 * svgwrite
