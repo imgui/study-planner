@@ -1,4 +1,5 @@
 import datetime
+import svgwrite
 
 # Input parameters (SEM for Semester)
 SEM_START_DATE = datetime.datetime(2021, 7, 26)
@@ -8,10 +9,9 @@ SEM_END_DATE = datetime.datetime(2021, 11, 27)
 CAL_START_WEEKDAY = 1 # 0 is Monday, 1 is Sunday ... (CAL for Calendar)
 
 # Design constants
-TABLES_COUNT = 2
 ROWS_PER_CELL = 4
 
-# Computed constants
+# Calendar constants
 semester_length_days = (SEM_END_DATE - SEM_START_DATE).days
 sem_start_weekday = int(SEM_START_DATE.strftime("%w")) # Weekday as a decimal number, 0 is Mon
 cal_start_date = SEM_START_DATE - datetime.timedelta(days=sem_start_weekday + CAL_START_WEEKDAY)
@@ -22,7 +22,7 @@ table1_weeks_count = int(cal_weeks_count / 2) + (cal_weeks_count % 2 > 0) # < Ro
 table2_weeks_count = cal_weeks_count - table1_weeks_count
 
 # Graphics constants
-width = 297.0 * 4
+width = 297.0 * 4 # A4 is typically 29.7x21.0 cm
 height = 210.0 * 4
 margin = 5.0 * 4
 row_count = table1_weeks_count * ROWS_PER_CELL + 1 # + 1 row for weekday names (mon, tues, wed...)
@@ -33,13 +33,12 @@ cell_height = row_height * ROWS_PER_CELL
 text_padding = 0.02 * cell_width
 text_size = 0.7 * row_height
 
-import svgwrite
-dwg = svgwrite.Drawing(filename='studyplanoutput.svg', size=(width, height))
-
 def draw_table(x, y, width, height, weeks):
+    global dwg
     global date
     global semester_week
     global first_table
+    
     start_x = x
 
     # Draw rows (grey lines)
@@ -64,17 +63,13 @@ def draw_table(x, y, width, height, weeks):
 
             # Draw sem week numbers
             # if current week is during sem and not during break
-            if (day == 0 
-                and date + datetime.timedelta(days=CAL_START_WEEKDAY) >= SEM_START_DATE 
-                and date + datetime.timedelta(days=CAL_START_WEEKDAY) < SEM_END_DATE 
-                and (date + datetime.timedelta(days=CAL_START_WEEKDAY) < SEM_BREAK_DATE 
-                or date + datetime.timedelta(days=CAL_START_WEEKDAY) >= SEM_RESUME_DATE)):
+            if day == 0:
                 semester_week = semester_week + 1
                 dwg.add(dwg.text(semester_week, insert=(x - text_padding * 4, y + cell_height / 2), 
                     fill='black', font_family='Helvetica', 
                     font_size=text_size, style="baseline-shift:-33%;text-anchor:end"))
 
-            # Draw week names and
+            # Draw week names
             if week == 0:
                 week_string = date.strftime("%a") # abbreviated weekday name ie "Mon"
                 dwg.add(dwg.text(week_string, insert=(x + cell_width/2, y - row_height / 2), 
@@ -106,9 +101,11 @@ def draw_table(x, y, width, height, weeks):
         week = week + 1
     first_table = False
 
-first_table = True
+dwg = svgwrite.Drawing(filename='studyplanoutput.svg', size=(width, height))
 date = cal_start_date
 semester_week = 0
+first_table = True
+
 draw_table(margin + row_height, row_height + margin, table_width, 0, table1_weeks_count)
 draw_table(3 * margin + table_width + row_height, row_height + margin, table_width, 0, table2_weeks_count)
 dwg.save()
